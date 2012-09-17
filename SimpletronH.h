@@ -2,7 +2,9 @@
 class Simpletron {
 public:
 	Simpletron();
-	void printWelcome();
+	void setProgram(int instructions[], int numInstructions);
+	void getInstructionsFromStdin();
+	void run();
 
 private:
 	int memory[100];
@@ -11,6 +13,7 @@ private:
 	int operationCode;
 	int operand;
 	int instructionRegister;
+	bool halt;
 	
-	void executeNextOp();
+	void tick();
 };

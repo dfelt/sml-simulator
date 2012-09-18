@@ -1,7 +1,7 @@
 #include <iostream>
 #include "SimpletronH.h"
 
-// Take 2 numbers from stdin and print sum
+// Take two numbers from stdin and print sum
 int test1[] = {
 	1007, // Read A
 	1008, // Read B
@@ -16,8 +16,7 @@ int test1[] = {
 };
 
 // Reads two numbers from the keyboard, then determines and prints the
-// larger value. THIS DOES NOT WORK YET
-
+// larger value.
 int test2[] = {
 	1009, // Read A
 	1010, // Read B
@@ -34,6 +33,6 @@ int test2[] = {
 
 int main() {
 	Simpletron cpu;
-	cpu.setProgram(test1, 10);
+	cpu.setProgram(test2, 11);
 	cpu.run();
 }

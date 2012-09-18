@@ -6,25 +6,6 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-// This isn't strictly necessary, but I have a strange attachment to enums...
-enum op {
-	READ       = 10,
-	WRITE      = 11,
-	
-	LOAD       = 20,
-	STORE      = 21,
-	
-	ADD        = 30,
-	SUBTRACT   = 31,
-	DIVIDE     = 32,
-	MULTIPLY   = 33,
-	
-	BRANCH     = 40,
-	BRANCHNEG  = 41,
-	BRANCHZERO = 42,
-	HALT       = 43
-};
-
 Simpletron::Simpletron() {
 	memset(memory, 0, sizeof(int) * 100); // Zero out array
 	accumulator = 0;
@@ -35,6 +16,7 @@ Simpletron::Simpletron() {
 	halt = false;
 }
 
+// Initialize with program from array (for testing purposes)
 void Simpletron::setProgram(int instructions[], int numInstructions) {
 	// Avoid buffer overflow
 	if (numInstructions > 100) numInstructions = 100;
@@ -44,7 +26,8 @@ void Simpletron::setProgram(int instructions[], int numInstructions) {
 	}
 }
 
-void Simpletron::getInstructionsFromStdin() {
+// Initialize with program from stdin
+void Simpletron::setProgramFromStdin() {
 	cout << "          *** Welcome to Simpletron! ***         " << endl
 		 << "*** Please enter your program one instruction ***" << endl
 		 << "*** (or data word) at a time. I will type the ***" << endl
@@ -64,30 +47,56 @@ void Simpletron::getInstructionsFromStdin() {
 	}
 }
 
+// Run simpletron until halt instruction encountered
 void Simpletron::run() {
 	while (!halt) tick();
 }
 
+// All valid opcodes
+enum op {
+	READ       = 10,
+	WRITE      = 11,
+	
+	LOAD       = 20,
+	STORE      = 21,
+	
+	ADD        = 30,
+	SUBTRACT   = 31,
+	DIVIDE     = 32,
+	MULTIPLY   = 33,
+	
+	BRANCH     = 40,
+	BRANCHNEG  = 41,
+	BRANCHZERO = 42,
+	HALT       = 43
+};
+
+// Execute a single instruction
 void Simpletron::tick() {
+	// Get next instruction, incrementing the instructionCounter
 	instructionRegister = memory[instructionCounter++];
+	// Extract opcode
 	operationCode = instructionRegister / 100;
+	// Extract operand
 	operand = instructionRegister % 100;
 	
+	// Choose operation based on operationCode
 	switch (operationCode) {
+		// IO
 		case READ:
 			cin >> memory[operand];
 			break;
 		case WRITE:
 			cout << memory[operand] << endl;
 			break;
-	
+		// Memory
 		case LOAD:
 			accumulator = memory[operand];
 			break;
 		case STORE:
 			memory[operand] = accumulator;
 			break;
-		
+		// Math
 		case ADD:
 			accumulator += memory[operand];
 			break;
@@ -100,12 +109,15 @@ void Simpletron::tick() {
 		case MULTIPLY:
 			accumulator *= memory[operand];
 			break;
-		
+		// Control flow
 		case BRANCH:
+			instructionCounter = accumulator;
 			break;
 		case BRANCHNEG:
+			if (accumulator < 0) instructionCounter = operand;
 			break;
 		case BRANCHZERO:
+			if (accumulator == 0) instructionCounter = operand;
 			break;
 		case HALT:
 			cout << "Simpletron execution terminated" << endl;

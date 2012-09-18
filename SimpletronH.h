@@ -3,7 +3,7 @@ class Simpletron {
 public:
 	Simpletron();
 	void setProgram(int instructions[], int numInstructions);
-	void getInstructionsFromStdin();
+	void setProgramFromStdin();
 	void run();
 
 private:

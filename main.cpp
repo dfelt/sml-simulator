@@ -31,8 +31,57 @@ int test2[] = {
 	0000  // Variable B
 };
 
+int prog1[] = {
+	// READ size (0)
+	1018,
+	// LOAD size (1)
+	2018,
+	// BRANCHNEG end (2)
+	4115,
+	// BRANCHZERO end (3)
+	4215,
+// next:
+	// READ num (4)
+	1020,
+	// LOAD num (5)
+	2020,
+	// SUBTRACT max (6)
+	3119,
+	// BRANCHNEG skip (7)
+	4110,
+	// LOAD num (8)
+	2020,
+	// STORE max (9)
+	2119,
+// skip:
+	// LOAD size (10)
+	2018,
+	// SUBTRACT one (11)
+	3117,
+	// STORE size (12)
+	2118,
+	// BRANCHZERO end (13)
+	4215,
+	// BRANCH next (14)
+	4004,
+// end:
+	// WRITE max (15)
+	1119,
+	// HALT (16)
+	4300,
+// memory:
+	// one (17)
+	0001,
+	// size (18)
+	0000,
+	// max (19)
+	0000,
+	// num (20)
+	0000
+};
+
 int main() {
 	Simpletron cpu;
-	cpu.setProgram(test2, 11);
+	cpu.setProgram(prog1, 21);
 	cpu.run();
 }

@@ -13,6 +13,7 @@ Simpletron::Simpletron() {
 	operand = 0;
 	instructionRegister = 0;
 	halt = false;
+	fatal = false;
 }
 
 // Initialize with program from array (for testing purposes)
@@ -40,6 +41,10 @@ void Simpletron::setProgramFromStdin() {
 		cout << address << "? ";
 		int input;
 		cin >> input;
+		if ((input < -99999) || (input > 99999)) {
+			cout << "Invalid input. Try again." << endl;
+			continue;
+		}
 		if (input == -99999) return;
 		memory[address] = input;
 		address++;
@@ -49,7 +54,11 @@ void Simpletron::setProgramFromStdin() {
 // Run simpletron until halt instruction encountered
 void Simpletron::run() {
 	while (!halt) tick();
-	cout << "Simpletron execution terminated." << endl;
+	if (fatal) {
+		cout << "*** Simpletron execution abnormally terminated***" << endl;
+	} else {
+		cout << "*** Simpletron execution terminated ***" << endl;
+	}
 	dump();
 }
 
@@ -105,7 +114,13 @@ void Simpletron::tick() {
 			accumulator -= memory[operand];
 			break;
 		case DIVIDE:
-			accumulator /= memory[operand];
+			if (memory[operand] != 0) {
+				accumulator /= memory[operand];
+			} else {
+				cout << "*** Attempt to divide by zero ***" << endl;
+				halt = true;
+				fatal = true;
+			}
 			break;
 		case MULTIPLY:
 			accumulator *= memory[operand];
@@ -124,27 +139,32 @@ void Simpletron::tick() {
 			halt = true;
 			break;
 		default:
-			cout << "Unrecogniced opcode: " << operationCode << endl;
+			cout << "*** Unrecognized opcode: " << operationCode << " ***" << endl;
 			halt = true;
+			fatal = true;
 	}
+	
 }
 
 void Simpletron::dump() {
+	cout << setfill('0');
 	cout << "REGISTERS:" << endl;
-	cout << "accumulator         "    << showpos   << setw(5) << setfill('0') << internal << accumulator << endl;
-	cout << "instructionCounter     " << noshowpos << setw(2) << setfill('0') << instructionCounter << endl;
-	cout << "instructionRegister "    << showpos   << setw(5) << setfill('0') << internal << instructionRegister << endl;
-	cout << "operationCode          " << noshowpos << setw(2) << setfill('0') << operationCode << endl;
-	cout << "operand                " << noshowpos << setw(2) << setfill('0') << operand << endl;
+	cout << "accumulator         "    << showpos   << setw(5) << internal << accumulator << endl;
+	cout << "instructionCounter     " << noshowpos << setw(2) << instructionCounter << endl;
+	cout << "instructionRegister "    << showpos   << setw(5) << internal << instructionRegister << endl;
+	cout << "operationCode          " << noshowpos << setw(2) << operationCode << endl;
+	cout << "operand                " << noshowpos << setw(2)  << operand << endl;
 
 	cout << "MEMORY:" << endl;
 	cout << "       0     1     2     3     4     5     6     7     8     9";
 	
 	for (int i = 0; i < 100; i++) {
 		if ((i % 10) == 0) {
-			cout << endl << noshowpos << setw(2) << i;
+			cout << endl;
+			if (i == 0) cout << ' ';
+			cout << noshowpos << i;
 		}
-		cout << ' ' << showpos << setw(5) << setfill('0') << internal << memory[i];
+		cout << ' ' << showpos << setw(5) << internal << memory[i];
 	}
 	cout << endl;
 

@@ -83,6 +83,6 @@ int prog1[] = {
 int main() {
 	Simpletron cpu;
 	cpu.setProgramFromStdin();
-	std::cout << "Finished loading program. Beginning execution." << std::endl;
+	std::cout << "*** Finished loading program, beginning execution ***" << std::endl;
 	cpu.run();
 }

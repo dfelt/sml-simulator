@@ -15,6 +15,7 @@ private:
 	int operand;
 	int instructionRegister;
 	bool halt;
+	bool fatal;
 	
 	void tick();
 	void dump();

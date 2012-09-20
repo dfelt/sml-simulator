@@ -50,6 +50,7 @@ void Simpletron::setProgramFromStdin() {
 // Run simpletron until halt instruction encountered
 void Simpletron::run() {
 	while (!halt) tick();
+	cout << "Simpletron execution terminated" << endl;
 }
 
 // All valid opcodes
@@ -120,10 +121,10 @@ void Simpletron::tick() {
 			if (accumulator == 0) instructionCounter = operand;
 			break;
 		case HALT:
-			cout << "Simpletron execution terminated" << endl;
 			halt = true;
 			break;
 		default:
 			cout << "Unrecogniced opcode: " << operationCode << endl;
+			halt = true;
 	}
 }

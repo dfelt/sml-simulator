@@ -7,7 +7,8 @@ public:
 	void run();
 
 private:
-	int memory[100];
+	static const int MEM_SIZE = 100;
+	int memory[MEM_SIZE];
 	int accumulator;
 	int instructionCounter;
 	int operationCode;
@@ -16,4 +17,5 @@ private:
 	bool halt;
 	
 	void tick();
+	void dump();
 };

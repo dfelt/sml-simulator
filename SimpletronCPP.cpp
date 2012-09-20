@@ -1,13 +1,12 @@
 #include "SimpletronH.h"
 #include <iostream>
 #include <string.h>
+#include <iomanip>
 
-using std::cout;
-using std::cin;
-using std::endl;
+using namespace std;
 
 Simpletron::Simpletron() {
-	memset(memory, 0, sizeof(int) * 100); // Zero out array
+	memset(memory, 0, sizeof(int) * MEM_SIZE); // Zero out array
 	accumulator = 0;
 	instructionCounter = 0;
 	operationCode = 0;
@@ -19,7 +18,7 @@ Simpletron::Simpletron() {
 // Initialize with program from array (for testing purposes)
 void Simpletron::setProgram(int instructions[], int numInstructions) {
 	// Avoid buffer overflow
-	if (numInstructions > 100) numInstructions = 100;
+	if (numInstructions > MEM_SIZE) numInstructions = MEM_SIZE;
 	// Write instructions starting at address 0
 	for (int i = 0; i < numInstructions; i++) {
 		memory[i] = instructions[i];
@@ -50,7 +49,8 @@ void Simpletron::setProgramFromStdin() {
 // Run simpletron until halt instruction encountered
 void Simpletron::run() {
 	while (!halt) tick();
-	cout << "Simpletron execution terminated" << endl;
+	cout << "Simpletron execution terminated." << endl;
+	dump();
 }
 
 // All valid opcodes
@@ -128,3 +128,24 @@ void Simpletron::tick() {
 			halt = true;
 	}
 }
+
+void Simpletron::dump() {
+	cout << "REGISTERS:" << endl;
+	cout << "accumulator         "    << showpos   << setw(5) << setfill('0') << internal << accumulator << endl;
+	cout << "instructionCounter     " << noshowpos << setw(2) << setfill('0') << instructionCounter << endl;
+	cout << "instructionRegister "    << showpos   << setw(5) << setfill('0') << internal << instructionRegister << endl;
+	cout << "operationCode          " << noshowpos << setw(2) << setfill('0') << operationCode << endl;
+	cout << "operand                " << noshowpos << setw(2) << setfill('0') << operand << endl;
+
+	cout << "MEMORY:" << endl;
+	cout << "       0     1     2     3     4     5     6     7     8     9";
+	
+	for (int i = 0; i < 100; i++) {
+		if ((i % 10) == 0) {
+			cout << endl << noshowpos << setw(2) << i;
+		}
+		cout << ' ' << showpos << setw(5) << setfill('0') << internal << memory[i];
+	}
+	cout << endl;
+
+};
